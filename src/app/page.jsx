@@ -9,9 +9,9 @@ export default function Home() {
       <div className={styles.content}>
         <div className={styles.text_section}>
           <h3 className={styles.welcome_title}>Seja Bem-Vindo(a)!</h3>
-          <h1 className={styles.logo}>ClientFlow</h1>
+          <h1 className={styles.logo}>BoostFy</h1>
           <Image src={'/Lottie2.gif'} height={300} width={300} alt="Animation Gif"/>
-          <p className={styles.paragraph}>"Está pronto para começar? Envie seus documentos e inicie seu processo de integração com facilidade."</p>
+          <p className={styles.paragraph}>Impulsione seu negócio com a BoostFy. Comece agora!</p>
           <button className={styles.start_btn}>Começar</button>
         </div>
       </div>
