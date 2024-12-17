@@ -11,7 +11,7 @@ export default function Home() {
           <h3 className={styles.welcome_title}>Seja Bem-Vindo(a)!</h3>
           <h1 className={styles.logo}>ClientFlow</h1>
           <Image src={'/Lottie2.gif'} height={300} width={300} alt="Animation Gif"/>
-          <p className={styles.paragraph}>Envie seus dados e documentos para iniciar o processo de integração. Vamos começar?</p>
+          <p className={styles.paragraph}>"Está pronto para começar? Envie seus documentos e inicie seu processo de integração com facilidade."</p>
           <button className={styles.start_btn}>Começar</button>
         </div>
       </div>
