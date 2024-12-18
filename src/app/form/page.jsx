@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import styles from './Form.module.css'; // Importando o arquivo CSS
+import Nav from "@/components/Nav/Nav";
 
 export default function Form() {
   const [companyName, setCompanyName] = useState("")
@@ -23,6 +24,7 @@ export default function Form() {
 
   return (
     <>
+      <Nav />
       <div className={styles.content}>
           <h1 className={styles.title}>Vamos Impulsionar Seu Negócio Juntos</h1>
           <form onSubmit={handleSubmit} className={styles.form}>

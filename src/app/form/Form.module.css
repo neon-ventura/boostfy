@@ -1,18 +1,20 @@
 /* Form.module.css */
 
 .content {
-    background-color: var(--gray);
+    background-color: #fff;
     height: 100vh;
 }
 
 .title {
     font-size: 2rem;
-    color: #333;
+    font-family: "Poppins", sans-serif;
+    color: var(--blue);
     text-align: center;
     margin-bottom: 20px;
   }
   
   .form {
+    background-color: var(--gray);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -23,7 +25,7 @@
   
   .subtitle {
     font-size: 1.2rem;
-    color: #555;
+    color: var(--light-blue);
     margin-bottom: 15px;
     text-align: center;
   }
@@ -35,7 +37,8 @@
   .label {
     display: block;
     font-weight: bold;
-    color: #444;
+    color: #fff;
+    font-family: "Poopins", sans-serif;
   }
   
   .input {
@@ -48,14 +51,14 @@
   }
   
   .input:focus {
-    border-color: #007bff;
+    border-color: var(--blue);
     outline: none;
   }
   
   .submitButton {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: var(--blue);
     color: white;
     border: none;
     border-radius: 5px;
@@ -64,6 +67,7 @@
   }
   
   .submitButton:hover {
-    background-color: #0056b3;
+    background-color: var(--gray);
+    border: 1px solid var(--light-blue);
   }
   
