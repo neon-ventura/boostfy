@@ -43,3 +43,33 @@
     border: 1px solid var(--light-blue);
     transition: 0.2s ease-out;
 }
+
+.img_pc {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .content {
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .paragraph {
+        font-size: 2.5em;
+        width: 400px;
+    }
+
+    .logo {
+        font-size: 6em;
+    }
+
+    .img {
+        display: none;
+    }
+
+    .img_pc {
+        display: block;
+    }
+}

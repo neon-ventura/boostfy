@@ -1,11 +1,16 @@
 import styles from "./Nav.module.css"
+import Link from "next/link"
 
 export default function Nav() {
-    return(
+    return (
         <>
             <nav className={styles.nav}>
-                <h1 className={styles.logo}>BoostFy</h1>
-                <button className={styles.start_btn}>Começar</button>
+                <Link href={'/'}>
+                    <h1 className={styles.logo}>BoostFy</h1>
+                </Link>
+                <Link href={'/form'}>
+                    <button className={styles.start_btn}>Começar</button>
+                </Link>
             </nav>
         </>
     )

@@ -1,4 +1,5 @@
 'use client'
+import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import styles from './Form.module.css'; // Importando o arquivo CSS
 import Nav from "@/components/Nav/Nav";
@@ -29,6 +30,13 @@ export default function Form() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulário enviado!",
+      text: "Seu formulário foi enviado com successo.\n" + "Obrigado por nos escolher!"
+    })
+
     await fetch("/api", {
       method: "POST",
       headers: {
@@ -36,6 +44,12 @@ export default function Form() {
       },
       body: JSON.stringify(taskData)
     })
+
+    setCnpj("")
+    setCompanyName("")
+    setEmployees("")
+    setSector("")
+    setWebSite("")
   }
 
   return (

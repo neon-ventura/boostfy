@@ -13,6 +13,7 @@
     "@api/clickup": "file:.api/apis/clickup",
     "next": "15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sweetalert2": "^11.15.3"
   }
 }
