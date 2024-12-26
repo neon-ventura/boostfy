@@ -1,7 +1,7 @@
 'use client'
 import Swal from "sweetalert2";
 import { validateCNPJ } from "@/utils/cnpjValidator";
-import { use, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import styles from './Form.module.css';
 import Nav from "@/components/Nav/Nav";
 import Image from "next/image";
@@ -12,10 +12,11 @@ export default function Form() {
   const [webSite, setWebSite] = useState("")
   const [sector, setSector] = useState("")
   const [employees, setEmployees] = useState("")
+  const [file, setFile] = useState("")
 
   const [companyError, setCompanyError] = useState(false)
   const [cnpjError, setCnpjError] = useState(false)
-  const [sectorErro, setSectorError] = useState(false)
+  const [sectorError, setSectorError] = useState(false)
   const [employeesError, setEmployeesError] = useState(false)
 
   const [taskData, setTaskData] = useState({
@@ -31,9 +32,19 @@ export default function Form() {
       description: `Company Name: ${companyName}\n CNPJ: ${cnpj}\n Web Site: ${webSite}\n Sector: ${sector}\n Employees: ${employees}`,
       status: "to do",
       priority: 2,
+      attachments: [
+        {
+          data: file
+        }
+      ]
     });
   }, [companyName, cnpj, webSite, sector, employees]);
 
+  const formData = new FormData();
+  formData.append("task", JSON.stringify(taskData));  // Envia os dados da task
+  if (file) {
+    formData.append("attachment", file);  // Envia o arquivo se houver
+  }
 
   const handleCnpjChange = (e) => {
     let value = e.target.value.replace(/\D/g, "");
@@ -44,58 +55,54 @@ export default function Form() {
     setCnpj(value);
   };
 
-
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (companyName === '') {
       setCompanyError(true)
-      return
+      return;
     } else {
       setCompanyError(false)
     }
 
     if (!validateCNPJ(cnpj)) {
       setCnpjError(true)
-      return
+      return;
     } else {
       setCnpjError(false)
     }
 
     if (sector === '') {
       setSectorError(true)
-      return
+      return;
     } else {
       setSectorError(false)
     }
 
     if (employees === '' || employees == 0) {
       setEmployeesError(true)
-      return
+      return;
     } else {
       setEmployeesError(false)
     }
 
     await fetch("/api", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(taskData)
-    })
+      body: formData
+    });
 
     Swal.fire({
       icon: "success",
       title: "Formulário enviado!",
-      text: "Seu formulário foi enviado com successo." + " Obrigado por nos escolher!"
-    })
+      text: "Seu formulário foi enviado com sucesso. Obrigado por nos escolher!"
+    });
 
     setCnpj("")
     setCompanyName("")
     setEmployees("")
     setSector("")
     setWebSite("")
-  }
+  };
 
   return (
     <>
@@ -121,9 +128,9 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="cnpj">
-              CNPJ: {cnpjError ? (<span className={styles.span}>CNPJ invalido</span>) : ""}
+              CNPJ: {cnpjError ? (<span className={styles.span}>CNPJ inválido</span>) : ""}
               <input
-              maxLength={18}
+                maxLength={18}
                 value={cnpj}
                 onChange={handleCnpjChange}
                 placeholder="XX.XXX.XXX/XXXX-XX"
@@ -151,9 +158,9 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sector">
-              Setor/Área de atuação: {sectorErro ? (<span className={styles.span}>Selecione uma área</span>) : ""}
+              Setor/Área de atuação: {sectorError ? (<span className={styles.span}>Selecione uma área</span>) : ""}
               <select
-                className={`${styles.input} ${sectorErro ? styles.error : ""}`}
+                className={`${styles.input} ${sectorError ? styles.error : ""}`}
                 name="sector"
                 id="sector"
                 value={sector}
@@ -170,7 +177,7 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="employees">
-              Número de Funcionários: {companyError ? (<span className={styles.span}>Preencha o campo</span>) : ""}
+              Número de Funcionários: {employeesError ? (<span className={styles.span}>Preencha o campo</span>) : ""}
               <input
                 maxLength={7}
                 placeholder="Ex: 100"
@@ -183,6 +190,16 @@ export default function Form() {
               />
             </label>
           </div>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="file">
+              Arquivo:
+              <input
+                type="file"
+                accept=".pdf, .jpg, .jpeg, .png"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+            </label>
+          </div>
           <button className={styles.submitButton} type="submit">Enviar</button>
         </form>
         <Image priority className={styles.img} src={'/lottie-form.webp'} height={500} width={500} alt="lottie gif" />
@@ -190,3 +207,4 @@ export default function Form() {
     </>
   )
 }
+

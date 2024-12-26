@@ -1,28 +1,49 @@
-import { NextResponse } from "next/server";
+const listId = "901107866463";
+const authorization = "pk_158659484_QWV9ZJHAUFF7MI8O2TSJTA09CVHQ8VXV";
+const url = `https://api.clickup.com/api/v2/list/${listId}/task`;
+let taskId;
 
-export async function POST(req) {
-    const { name, description, status, priority } = await req.json();
+const CriarTarefas = async () => {
+  const options = {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      Authorization: authorization
+    },
+    body: JSON.stringify({ status: 'to do', priority: 2, notify_all: true, name: 'Sla fi' })
+  };
 
-    const listId = "901107866463";
-    const authorization = "pk_158659484_FYZ66BTUH9NE3JIUI442SC0IMSZ0256A"
-    const url = `https://api.clickup.com/api/v2/list/${listId}/task`;
-
-    const options = {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: authorization,
-      },
-      body: JSON.stringify({
-        name,
-        description,
-        status,
-        priority,
-      }),
-    };
-
-    const response = await fetch(url, options)
-    const data = await response.json()
-    return NextResponse.json({ message: "Task created successfully", data });
+  const response = await fetch(url, options);
+  const json = await response.json();
+  console.log("Tarefa criada:", json);
+  return json.id; // Retorna o ID da tarefa
 }
+
+const CriarAttachment = async (taskId) => {
+
+  const url = `https://api.clickup.com/api/v2/task/${taskId}/attachment`;
+
+  const arquivo = new File(["Olá Mundo"], "anexo.txt", {
+    type: 'text/plain'
+  })
+
+  const formData = new FormData()
+  formData.append("attachment", arquivo)
+
+  const options = {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      Authorization: authorization
+    },
+    body: formData
+  };
+
+  const response = await fetch(url, options);
+  const json = await response.json();
+  console.log("Anexo criado:", json);
+}
+
+
+CriarTarefas().then((taskId) => CriarAttachment(taskId))
