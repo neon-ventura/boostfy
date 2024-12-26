@@ -1,7 +1,7 @@
 'use client'
 import Swal from "sweetalert2";
 import { validateCNPJ } from "@/utils/cnpjValidator";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import styles from './Form.module.css';
 import Nav from "@/components/Nav/Nav";
 import Image from "next/image";
@@ -12,6 +12,11 @@ export default function Form() {
   const [webSite, setWebSite] = useState("")
   const [sector, setSector] = useState("")
   const [employees, setEmployees] = useState("")
+
+  const [companyError, setCompanyError] = useState(false)
+  const [cnpjError, setCnpjError] = useState(false)
+  const [sectorErro, setSectorError] = useState(false)
+  const [employeesError, setEmployeesError] = useState(false)
 
   const [taskData, setTaskData] = useState({
     name: "",
@@ -30,24 +35,46 @@ export default function Form() {
   }, [companyName, cnpj, webSite, sector, employees]);
 
 
+  const handleCnpjChange = (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+    value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+    value = value.replace(/(\d{4})(\d)/, "$1-$2");
+    setCnpj(value);
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (companyName.length > 100 || companyName === '') {
-      alert("Error no nome da empresa")
+    if (companyName === '') {
+      setCompanyError(true)
       return
+    } else {
+      setCompanyError(false)
     }
 
     if (!validateCNPJ(cnpj)) {
-      alert("CNPJ falso!!!")
+      setCnpjError(true)
       return
+    } else {
+      setCnpjError(false)
     }
 
-    Swal.fire({
-      icon: "success",
-      title: "Formulário enviado!",
-      text: "Seu formulário foi enviado com successo.\n" + "Obrigado por nos escolher!"
-    })
+    if (sector === '') {
+      setSectorError(true)
+      return
+    } else {
+      setSectorError(false)
+    }
+
+    if (employees === '' || employees == 0) {
+      setEmployeesError(true)
+      return
+    } else {
+      setEmployeesError(false)
+    }
 
     await fetch("/api", {
       method: "POST",
@@ -55,6 +82,12 @@ export default function Form() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(taskData)
+    })
+
+    Swal.fire({
+      icon: "success",
+      title: "Formulário enviado!",
+      text: "Seu formulário foi enviado com successo." + " Obrigado por nos escolher!"
     })
 
     setCnpj("")
@@ -73,11 +106,11 @@ export default function Form() {
           <h3 className={styles.subtitle}>Informações da empresa</h3>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="company_name">
-              Nome da empresa:
+              Nome da empresa: {companyError ? (<span className={styles.span}>Preencha o campo</span>) : ""}
               <input
                 maxLength={50}
                 placeholder="Ex: Google"
-                className={styles.input}
+                className={`${styles.input} ${companyError ? styles.error : ""}`}
                 type="text"
                 name="company_name"
                 id="company_name"
@@ -88,22 +121,22 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="cnpj">
-              CNPJ:
+              CNPJ: {cnpjError ? (<span className={styles.span}>CNPJ invalido</span>) : ""}
               <input
-                maxLength={18}
-                placeholder="00.000.000/0000-00"
-                className={styles.input}
+              maxLength={18}
+                value={cnpj}
+                onChange={handleCnpjChange}
+                placeholder="XX.XXX.XXX/XXXX-XX"
+                className={`${styles.input} ${cnpjError ? styles.error : ""}`}
                 type="text"
                 name="cnpj"
                 id="cnpj"
-                value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
               />
             </label>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="website">
-              Web Site:
+              Web Site: (Opcional)
               <input
                 maxLength={100}
                 placeholder="Ex: google.com"
@@ -118,9 +151,9 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sector">
-              Setor/Área de atuação:
+              Setor/Área de atuação: {sectorErro ? (<span className={styles.span}>Selecione uma área</span>) : ""}
               <select
-                className={styles.input}
+                className={`${styles.input} ${sectorErro ? styles.error : ""}`}
                 name="sector"
                 id="sector"
                 value={sector}
@@ -137,11 +170,11 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="employees">
-              Número de Funcionários:
+              Número de Funcionários: {companyError ? (<span className={styles.span}>Preencha o campo</span>) : ""}
               <input
                 maxLength={7}
                 placeholder="Ex: 100"
-                className={styles.input}
+                className={`${styles.input} ${employeesError ? styles.error : ""}`}
                 type="number"
                 name="employees"
                 id="employees"
@@ -152,7 +185,7 @@ export default function Form() {
           </div>
           <button className={styles.submitButton} type="submit">Enviar</button>
         </form>
-        <Image className={styles.img} src={'/lottie-form.webp'} height={500} width={500} />
+        <Image priority className={styles.img} src={'/lottie-form.webp'} height={500} width={500} alt="lottie gif" />
       </div>
     </>
   )

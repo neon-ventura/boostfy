@@ -72,6 +72,16 @@
   border: 1px solid var(--light-blue);
 }
 
+.error {
+  border: 1px solid red;
+}
+
+.span {
+  color: red;
+  font-weight: 100;
+  font-size: 13px;
+}
+
 @media (max-width: 768px) {
   .title {
     font-size: 2em;
