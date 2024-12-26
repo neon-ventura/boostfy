@@ -31,78 +31,85 @@ export default function Form() {
       name: companyName,
       description: `Company Name: ${companyName}\n CNPJ: ${cnpj}\n Web Site: ${webSite}\n Sector: ${sector}\n Employees: ${employees}`,
       status: "to do",
-      priority: 2,
-      attachments: [
-        {
-          data: file
-        }
-      ]
+      priority: 2
     });
   }, [companyName, cnpj, webSite, sector, employees]);
 
-  const formData = new FormData();
-  formData.append("task", JSON.stringify(taskData));  // Envia os dados da task
-  if (file) {
-    formData.append("attachment", file);  // Envia o arquivo se houver
-  }
-
-  const handleCnpjChange = (e) => {
-    let value = e.target.value.replace(/\D/g, "");
-    value = value.replace(/^(\d{2})(\d)/, "$1.$2");
-    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-    value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
-    value = value.replace(/(\d{4})(\d)/, "$1-$2");
+  const handleCnpjChange = (event) => {
+    let value = event.target.value;
+    value = value.replace(/\D/g, '');
+    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
     setCnpj(value);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (companyName === '') {
-      setCompanyError(true)
+      setCompanyError(true);
       return;
     } else {
-      setCompanyError(false)
+      setCompanyError(false);
     }
 
     if (!validateCNPJ(cnpj)) {
-      setCnpjError(true)
+      setCnpjError(true);
       return;
     } else {
-      setCnpjError(false)
+      setCnpjError(false);
     }
 
     if (sector === '') {
-      setSectorError(true)
+      setSectorError(true);
       return;
     } else {
-      setSectorError(false)
+      setSectorError(false);
     }
 
     if (employees === '' || employees == 0) {
-      setEmployeesError(true)
+      setEmployeesError(true);
       return;
     } else {
-      setEmployeesError(false)
+      setEmployeesError(false);
     }
 
-    await fetch("/api", {
-      method: "POST",
+    // Prepare the form data to send to the backend
+    const formData = new FormData();
+    formData.append("companyName", companyName);
+    formData.append("cnpj", cnpj);
+    formData.append("webSite", webSite);
+    formData.append("sector", sector);
+    formData.append("employees", employees);
+    if (file) formData.append("file", file);
+
+    const response = await fetch('/api', {
+      method: 'POST',
       body: formData
     });
 
-    Swal.fire({
-      icon: "success",
-      title: "Formulário enviado!",
-      text: "Seu formulário foi enviado com sucesso. Obrigado por nos escolher!"
-    });
-
-    setCnpj("")
-    setCompanyName("")
-    setEmployees("")
-    setSector("")
-    setWebSite("")
+    const result = await response.json();
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Formulário enviado!",
+        text: "Seu formulário foi enviado com sucesso. Obrigado por nos escolher!"
+      });
+      // Clear form fields
+      setCnpj("");
+      setCompanyName("");
+      setEmployees("");
+      setSector("");
+      setWebSite("");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: `Houve um erro: ${result.message}`
+      });
+    }
   };
+
 
   return (
     <>
