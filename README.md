@@ -8,7 +8,7 @@ Para executar o projeto localmente, siga os passos abaixo:
 
 1. **Clone o repositório:**
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/neon-ventura/boostfy.git
    cd <NOME_DA_PASTA>
    ```
 
