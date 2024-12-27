@@ -28,6 +28,7 @@
 }
 
 .start_btn {
+    text-align: center;
     height: 60px;
     width: 130px;
     border: none;
