@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+// 02.814.497/0002-98 CNPJ para exemplo se precisar
+
 const listId = "901107866463"; // <--- coloque o id da sua lista do CLickUp aqui
 const authorization = "pk_158659484_QWV9ZJHAUFF7MI8O2TSJTA09CVHQ8VXV"; // <--- coloque o token de acesso aqui
 const url = `https://api.clickup.com/api/v2/list/${listId}/task`;
@@ -64,4 +66,3 @@ export async function POST(req) {
   }
 }
 
-// 02.814.497/0002-98

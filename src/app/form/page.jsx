@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { validateCNPJ } from "@/utils/cnpjValidator";
 import { useState, useEffect } from "react";
 import styles from './Form.module.css';
-import Nav from "@/components/Nav/Nav";
+import NavForm from '../../components/NavForm/NavForm'
 import Image from "next/image";
 
 export default function Form() {
@@ -18,6 +18,7 @@ export default function Form() {
   const [cnpjError, setCnpjError] = useState(false)
   const [sectorError, setSectorError] = useState(false)
   const [employeesError, setEmployeesError] = useState(false)
+  const [fileError, setFileError] = useState(false)
 
   const [taskData, setTaskData] = useState({
     name: "",
@@ -41,7 +42,7 @@ export default function Form() {
     value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
     setCnpj(value);
   };
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +75,13 @@ export default function Form() {
       setEmployeesError(false);
     }
 
-    // Prepare the form data to send to the backend
+    if (file === '') {
+      setFileError(true)
+      return
+    }else {
+      setFileError(false)
+    }
+
     const formData = new FormData();
     formData.append("companyName", companyName);
     formData.append("cnpj", cnpj);
@@ -95,7 +102,7 @@ export default function Form() {
         title: "Formulário enviado!",
         text: "Seu formulário foi enviado com sucesso. Obrigado por nos escolher!"
       });
-      // Clear form fields
+
       setCnpj("");
       setCompanyName("");
       setEmployees("");
@@ -113,7 +120,7 @@ export default function Form() {
 
   return (
     <>
-      <Nav />
+      <NavForm />
       <h1 className={styles.title}>Vamos Impulsionar Seu Negócio Juntos</h1>
       <div className={styles.content}>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -199,8 +206,10 @@ export default function Form() {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="file">
-              Arquivo:
+              <p>Envie um material representativo da sua empresa</p>
+              {fileError ? (<span className={styles.span}>Escolha um arquivo</span>) : ""}
               <input
+                className={`${styles.input} ${fileError ? styles.error : ""}`}
                 type="file"
                 accept=".pdf, .jpg, .jpeg, .png"
                 onChange={(e) => setFile(e.target.files[0])}

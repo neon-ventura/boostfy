@@ -16,7 +16,7 @@ export default function Home() {
           <Link href={'/form'}><button className={styles.start_btn}>Começar</button></Link>
         </div>
         <div className={styles.img_pc}>
-          <Image src={'/Lottie2.gif'} height={600} width={600} alt="Animation Gif" />
+          <Image priority src={'/Lottie2.gif'} height={600} width={600} alt="Animation Gif" />
         </div>
       </div>
     </>
